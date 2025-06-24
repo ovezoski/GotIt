@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: property_db
+    container_name: db
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,6 +15,45 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: property_backend
+    env_file:
+      - /.env
+    environment:
+      DJANGO_DB_NAME: ${DJANGO_DB_NAME}
+      DJANGO_DB_USER: ${DJANGO_DB_USER}
+      DJANGO_DB_PASSWORD: ${DJANGO_DB_PASSWORD}
+      DJANGO_DB_HOST: db
+      DJANGO_DB_PORT: 5432
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "python manage.py migrate && python manage.py runserver 0.0.0.0:8000",
+      ]
+    volumes:
+      - ./backend:/a
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: property_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
 
 volumes:
   property_data:

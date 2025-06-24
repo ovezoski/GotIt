@@ -12,17 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path    
-from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DOTENV_PATH = BASE_DIR.parent / '.env'
-
-if DOTENV_PATH.is_file():
-    load_dotenv(DOTENV_PATH)
-else:
-    print(f"Warning: .env file not found at {DOTENV_PATH}")
-
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
 
@@ -78,11 +71,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'db'),
-        'USER': os.environ.get('POSTGRES_USER', 'user'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': os.environ.get('DJANGO_DB_NAME', 'db'),
+        'USER': os.environ.get('DJANGO_DB_USER', 'user'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'password'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhostUWU'),
+        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
 
@@ -111,11 +104,14 @@ REST_FRAMEWORK = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:3000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:3000"
+
 ]
 
 
