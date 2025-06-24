@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Got Property</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-sky-200 text-white container w-full">
+    <div class="bg-sky-700 w-1/2 mx-auto my-3">
+      {% if properties_list %}
+      <div class="bg-sky-600 p-3">
+        {% for property in properties_list %}
+        <div class="p-2 m-1 bg-sky-500 flex justify-between">
+          <div>
+            <a href="/property/{{ property.id }}/">{{ property.name }}</a>
+          </div>
+          <div>
+            <form
+              method="post"
+              action="{% url 'property:delete' property.id %}"
+            >
+              {% csrf_token %}
+              <input
+                type="submit"
+                class="bg-red-500 p-1 text-white"
+                value="Delete"
+              />
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No properties are available.</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-sky-700 w-1/2 mx-auto my-3 p-2">
+      <form
+        action="{% url 'property:create' %}"
+        method="post"
+        class="flex flex-col items-stretch"
+      >
+        {% csrf_token %}
+        <div class="p-2">
+          <label class="text-xs" for="name">Property Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Property"
+            class="bg-white p-1 w-full text-black"
+          />
+        </div>
+        <div class="p-2">
+          <label class="text-xs" for="date">Date Of Construction</label>
+          <input
+            id="date"
+            type="date"
+            name="created_at"
+            placeholder="Property"
+            class="bg-white p-1 w-full text-zinc-900"
+          />
+        </div>
+        <div class="p-2">
+          <input type="submit" class="bg-sky-500 p-1 rounded w-full" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

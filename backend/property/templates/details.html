@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Got Property</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-sky-200 text-white container w-full">
+    <div class="bg-sky-800 p-5">
+      <a href="/property/"> All Properties</a>
+    </div>
+
+    {% if property %}
+    <div class="bg-sky-700 w-1/2 mx-auto my-3">
+      <h3 class="bg-sky-700">{{property.name}}</h3>
+      <div>{{property.created_at}}</div>
+
+      <div class="bg-sky-600 p-3 shadow-md">
+        <form class="flex flex-col">
+          {% csrf_token %} {% for order in property.order_set.all %}
+          <div class="m-3 shadow-sm bg-sky-500">
+            <div class="p-1">${{order.price }}</div>
+
+            <div class="p-1">{{ order.created_at }}</div>
+          </div>
+          {% endfor %}
+          <div>
+            <input type="text" value="{{ property.name }}" />
+          </div>
+          <div>
+            <input type="date" value="{{ property.created_at }}" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% endif %}
+  </body>
+</html>
