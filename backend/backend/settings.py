@@ -19,9 +19,13 @@ DOTENV_PATH = BASE_DIR.parent / '.env'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
 
-DEBUG = os.environ.get('DEBUG', 'False')
+allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',') if host.strip()]
 
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+if DEBUG:
+    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
+    
 
 INSTALLED_APPS = [
     'property.apps.PropertyConfig',
@@ -103,15 +107,18 @@ REST_FRAMEWORK = {
 
 
 
+cors_allowed_origins_str = os.environ.get('CORS_ALLOWED_ORIGINS', '')
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000"
+    origin.strip()
+    for origin in cors_allowed_origins_str.split(',')
+    if origin.strip()
 ]
 
+csrf_trusted_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000"
-
+    origin.strip()
+    for origin in csrf_trusted_origins_str.split(',')
+    if origin.strip()
 ]
 
 

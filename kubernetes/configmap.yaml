@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: property-config
+  namespace: property-app
+data:
+  DJANGO_ALLOWED_HOSTS: "backend.property-app.svc.cluster.local,localhost,127.0.0.1,10.42.0.0/16"

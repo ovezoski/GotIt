@@ -29,13 +29,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
-  const {
-    data,
-    loading,
-  }: {
-    data: Property[] | null;
-    loading: boolean;
-  } = useFetch("property/json/");
+  const { data, loading } = useFetch<Property[]>("property/json/");
 
   const getCookie = useCallback((name: string) => {
     let cookieValue = null;
