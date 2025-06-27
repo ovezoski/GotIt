@@ -71,6 +71,8 @@ spec:
                 secretKeyRef:
                   name: property-secrets
                   key: POSTGRES_PASSWORD
+            - name: FORCE_RELOAD_TIMESTAMP
+              value: "2025-06-27-1545"
 
           # TODO: use Gunicorn/uWSGI in production.
           # entrypoint: ["/usr/local/bin/gunicorn"]

@@ -34,3 +34,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 3
+          env:
+            - name: FORCE_RELOAD_TIMESTAMP
+              value: "2025-06-27-1545"

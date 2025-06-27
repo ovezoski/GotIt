@@ -21,7 +21,7 @@ spec:
     - host: localhost
       http:
         paths:
-          - path: /api/{path:.*}
+          - path: /api
             pathType: Prefix
             backend:
               service:
