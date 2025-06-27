@@ -1,13 +1,13 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
 from . import views
 
+router = routers.DefaultRouter()
+router.register('', views.PropertyViewSet) 
+
+
 app_name = "property" 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("<int:pk>/", views.DetailView.as_view() , name="detail"),
-    path("create/", views.create, name="create"),
-    path("<int:property_id>/delete", views.delete, name="delete"),
-    path("json/", views.list_property_json, name="list_property_json"),
-
+    path('', include(router.urls))
 ]

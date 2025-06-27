@@ -1,50 +1,30 @@
-from django.http import HttpResponse,  HttpResponseRedirect, JsonResponse
-
-from django.template import loader
-from django.shortcuts import render, get_object_or_404
-from django.core import serializers
-from django.views import generic
-from django.middleware.csrf import get_token
+from rest_framework import  viewsets, permissions 
 from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework import serializers as rest_serializers
-
+from django.utils.decorators import method_decorator
 from.serializers import PropertySerializer
 from .models import Property
 
-def index(request):
-    properties_list = Property.objects.order_by("-created_at")[:5]
-    template = loader.get_template("index.html")
-    context = {'properties_list' : properties_list}
-    return HttpResponse(template.render(context, request))
+@method_decorator(ensure_csrf_cookie, name='dispatch') 
+class PropertyViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
 
-def create(request):
-
-    name = request.POST["name"]
-    created_at = request.POST["created_at"]
-
-    property = Property()
-    property.name = name
-    property.created_at = created_at
-
-    property.save()
-
-    return HttpResponseRedirect("/property")
-
-def delete(request, property_id):
-    property = get_object_or_404(Property, pk=property_id)
-    property.delete()
-
-    return HttpResponseRedirect("/property")
-
-@ensure_csrf_cookie
-def list_property_json(request):
-    response = Property.objects.all()
-    serializer = PropertySerializer(response, many=True)
-
-    return JsonResponse(serializer.data, safe=False)
-
-
-class DetailView ( generic.DetailView ):
-    model = Property
-    template_name = "details.html"
+    def get_serializer_context(self):
+        """
+        Passes the request object to the serializer context,
+        which is necessary for `request.build_absolute_uri`.
+        """
+        return {'request': self.request}
     
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'create':
+            permission_classes = [permissions.AllowAny]
+        elif self.action in ['update', 'partial_update', 'destroy', 'delete']:
+            permission_classes = [permissions.AllowAny] 
+        else:
+            permission_classes = [permissions.AllowAny] 
+        return [permission() for permission in permission_classes]
+

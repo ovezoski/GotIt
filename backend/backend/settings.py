@@ -78,7 +78,7 @@ DATABASES = {
         'NAME': os.environ.get('DJANGO_DB_NAME', 'db'),
         'USER': os.environ.get('DJANGO_DB_USER', 'user'),
         'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'password'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhostUWU'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
         'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
@@ -150,3 +150,7 @@ CSRF_COOKIE_AGE=30
 CSRF_COOKIE_SAMESITE=None
 CSRF_USE_SESSIONS=False
 CORS_ALLOW_CREDENTIALS = True
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
