@@ -24,7 +24,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: property-secrets
-                  key: POSTGRES_DB
+                  key: DJANGO_DB_NAME
             - name: DJANGO_DB_USER
               valueFrom:
                 secretKeyRef:
