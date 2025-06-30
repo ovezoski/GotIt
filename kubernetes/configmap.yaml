@@ -4,6 +4,6 @@ metadata:
   name: property-config
   namespace: property-app
 data:
-  ALLOWED_HOSTS: "backend.property-app.svc.cluster.local,localhost,127.0.0.1,10.42.0.0/16,api.local"
+  ALLOWED_HOSTS: "backend.property-app.svc.cluster.local,localhost,127.0.0.1,10.42.0.0/16,api.localhost"
   DEBUG: "False"
-  VITE_API_BASE_URL: "http://api.local"
+  VITE_API_BASE_URL: "http://api.localhost"
