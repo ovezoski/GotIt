@@ -5,7 +5,9 @@ import type { Property } from "@/types/property";
 import { useCallback, useEffect, useState } from "react";
 
 function HomePage() {
-  const { data, loading, refresh } = useFetch<Property[]>("property/");
+  const { data, loading, refresh } = useFetch<{ results: Property[] }>(
+    "property/"
+  );
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   const getCookie = useCallback((name: string) => {
@@ -39,7 +41,7 @@ function HomePage() {
               <Skeleton className="h-30" />
             </div>
           ) : (
-            data?.map((property: Property) => (
+            data?.results?.map((property: Property) => (
               <PropertyCard
                 property={property}
                 key={property.pk}

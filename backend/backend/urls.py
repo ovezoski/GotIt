@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from django.conf import settings
 from django.conf.urls.static import static 
-
+from property.urls import router as property_router 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -32,16 +32,15 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+project_router = routers.DefaultRouter()
+project_router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('property/', include("property.urls")),
+    path('users/', include(project_router.urls)),
+    path('', include(property_router.urls)),
     path('api-auth/', include('rest_framework.urls'))
 ] + debug_toolbar_urls()
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

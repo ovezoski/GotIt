@@ -11,10 +11,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      sha: ${{ steps.vars.outputs.sha }}
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -25,6 +29,10 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: Get short Git SHA
+        id: vars
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Build and push Django backend image
         id: backend_build
         uses: docker/build-push-action@v5
@@ -32,8 +40,9 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: blagojaovezoski/property-backend:latest
-
+          tags: |
+            blagojaovezoski/property-backend:${{ steps.vars.outputs.sha }}
+            blagojaovezoski/property-backend:latest
       - name: Build and push React frontend image
         id: frontend_build
         uses: docker/build-push-action@v5
@@ -41,4 +50,6 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: blagojaovezoski/property-frontend:latest
+          tags: |
+            blagojaovezoski/property-frontend:${{ steps.vars.outputs.sha }}
+            blagojaovezoski/property-frontend:latest

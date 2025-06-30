@@ -23,12 +23,7 @@ services:
     container_name: property_backend
     env_file:
       - /.env
-    environment:
-      DJANGO_DB_NAME: ${DJANGO_DB_NAME}
-      DJANGO_DB_USER: ${DJANGO_DB_USER}
-      DJANGO_DB_PASSWORD: ${DJANGO_DB_PASSWORD}
-      DJANGO_DB_HOST: db
-      DJANGO_DB_PORT: 5432
+
     ports:
       - "8000:8000"
     depends_on:
@@ -38,7 +33,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "python manage.py migrate && python manage.py runserver 0.0.0.0:8000",
+        "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 backend.wsgi:application",
       ]
     volumes:
       - ./backend:/a
