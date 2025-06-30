@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: react-frontend
-          image: blagojaovezoski/property-frontend:96a1dc5
+          image: blagojaovezoski/property-frontend:5cc948c
           ports:
             - containerPort: 80
           envFrom:

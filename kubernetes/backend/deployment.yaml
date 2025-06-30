@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: migrate-db
-          image: blagojaovezoski/property-backend:96a1dc5
+          image: blagojaovezoski/property-backend:5cc948c
           command: ["python", "manage.py", "migrate"]
           env:
             - name: DJANGO_DB_NAME
@@ -41,7 +41,7 @@ spec:
               value: "5432"
       containers:
         - name: django-backend
-          image: blagojaovezoski/property-backend:96a1dc5
+          image: blagojaovezoski/property-backend:5cc948c
           ports:
             - containerPort: 8000
           envFrom:
