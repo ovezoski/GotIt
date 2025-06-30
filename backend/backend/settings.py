@@ -19,13 +19,16 @@ DOTENV_PATH = BASE_DIR.parent / '.env'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
 
-allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',') if host.strip()]
+# allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '')
+# ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',') if host.strip()]
 
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
-if DEBUG:
-    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
+# DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True
+# if DEBUG:
+#     ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
     
+ALLOWED_HOSTS =["*"]
+
 
 INSTALLED_APPS = [
     'property.apps.PropertyConfig',
