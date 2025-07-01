@@ -6,7 +6,7 @@ metadata:
   labels:
     app: frontend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: frontend
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: react-frontend
-          image: blagojaovezoski/property-frontend:dcf55ad
+          image: blagojaovezoski/property-frontend:006a481
           ports:
             - containerPort: 80
           envFrom:

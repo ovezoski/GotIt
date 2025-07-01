@@ -58,9 +58,11 @@ function CreatePropertyPage() {
     }
 
     const csrftoken = getCookie("csrftoken");
+    const API_BASE_URL =
+      import.meta.env.VITE_API_BASE_URL || "http://api.localhost";
 
     try {
-      const response = await fetch("http://localhost:8000/property/", {
+      const response = await fetch(`${API_BASE_URL}/property/`, {
         method: "POST",
         headers: {
           "X-CSRFToken": csrftoken ?? "",

@@ -6,7 +6,7 @@ metadata:
   labels:
     app: backend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: backend
@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: migrate-db
-          image: blagojaovezoski/property-backend:dcf55ad
+          image: blagojaovezoski/property-backend:006a481
           command: ["python", "manage.py", "migrate"]
           env:
             - name: DJANGO_DB_NAME
@@ -41,7 +41,7 @@ spec:
               value: "5432"
       containers:
         - name: django-backend
-          image: blagojaovezoski/property-backend:dcf55ad
+          image: blagojaovezoski/property-backend:006a481
           ports:
             - containerPort: 8000
           envFrom:
