@@ -5,3 +5,7 @@ export type Property = {
   main_image: string;
   main_image_url: string;
 };
+
+export interface PropertyListResponse {
+  results: Property[];
+}

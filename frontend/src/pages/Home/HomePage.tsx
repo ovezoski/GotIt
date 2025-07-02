@@ -1,14 +1,19 @@
 import PropertyCard from "@/components/PropertyCard";
+import SearchBar from "@/components/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
-import type { Property } from "@/types/property";
+import type { Property, PropertyListResponse } from "@/types/property";
 import { useCallback, useEffect, useState } from "react";
+import PropertyPagination from "./PropertyPagination";
 
 function HomePage() {
-  const { data, loading, refresh } = useFetch<{ results: Property[] }>(
-    "property/"
-  );
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+  const { data, refresh, loading } = useFetch<PropertyListResponse>(
+    `/property?page=${page}&pageSize=8&search=${search}`
+  );
 
   const getCookie = useCallback((name: string) => {
     let cookieValue = null;
@@ -32,6 +37,10 @@ function HomePage() {
 
   return (
     <>
+      <SearchBar search={search} setSearch={setSearch} />
+
+      <PropertyPagination totalPages={5} page={page} setPage={setPage} />
+
       <div className="w-full p-2">
         <div className="m-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 row-span-full  gap-3 grid">
           {loading ? (

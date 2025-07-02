@@ -1,15 +1,25 @@
 from .models import Property
 from .serializers import PropertySerializer
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters, pagination
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
+
+
+class StandardResultSetPagination(pagination.PageNumberPagination):
+    page_size = 8
+    max_page_size = 100
+    page_query_param = 'page'
+    page_size_query_param = 'pageSize'
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+    pagination_class = StandardResultSetPagination
 
     def get_serializer_context(self):
         """
