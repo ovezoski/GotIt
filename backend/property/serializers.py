@@ -7,22 +7,22 @@ from .models import Property
 
 class PropertySerializer(serializers.ModelSerializer):
 
-    main_image = serializers.ImageField(read_only=True) 
+    main_image = serializers.ImageField(read_only=True)
     main_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Property
-        fields = ['name', 'created_at', 'main_image', 'main_image_url', 'pk']
-        read_only_fields = ['created_at']
+        fields = ["name", "created_at", "main_image", "main_image_url", "pk"]
+        read_only_fields = ["created_at"]
 
     def get_main_image_url(self, obj):
 
-        request = self.context.get('request')
+        request = self.context.get("request")
 
         default_image_paths = [
-            os.path.join(settings.STATIC_URL, 'property/images/default_property_1.jpg'),
-            os.path.join(settings.STATIC_URL, 'property/images/default_property_2.jpg'),
-            os.path.join(settings.STATIC_URL, 'property/images/default_property_3.jpg'),
+            os.path.join(settings.STATIC_URL, "property/images/default_property_1.jpg"),
+            os.path.join(settings.STATIC_URL, "property/images/default_property_2.jpg"),
+            os.path.join(settings.STATIC_URL, "property/images/default_property_3.jpg"),
         ]
 
         if obj.main_image and request:
