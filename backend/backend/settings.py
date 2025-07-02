@@ -27,8 +27,7 @@ DEBUG = True
 # if DEBUG:
 #     ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
     
-ALLOWED_HOSTS =["*"]
-
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'property.apps.PropertyConfig',
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'rest_framework',
     'corsheaders',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -106,12 +106,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-    
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
-
-
 
 cors_allowed_origins_str = os.environ.get('CORS_ALLOWED_ORIGINS', '')
 CORS_ALLOWED_ORIGINS = [
@@ -136,8 +133,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -149,15 +144,62 @@ INTERNAL_URL = [
     "localhost",
 ]
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False 
+SESSION_COOKIE_SECURE = False
 
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = False 
-CSRF_COOKIE_AGE=30
-CSRF_COOKIE_SAMESITE=None
-CSRF_USE_SESSIONS=False
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_AGE = 30
+CSRF_COOKIE_SAMESITE = None
+CSRF_USE_SESSIONS = False
 CORS_ALLOW_CREDENTIALS = True
 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+            "querystring_auth": False,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            "file_overwrite": False,
+        }
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+            "querystring_auth": False,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            "location": "static",
+            "file_overwrite": True,
+        }
+    }
+}
+
+STATIC_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+if DEBUG:
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'

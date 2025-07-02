@@ -23,14 +23,17 @@ from django.conf import settings
 from django.conf.urls.static import static 
 from property.urls import router as property_router 
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'username', 'email', 'is_staff']
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 project_router = routers.DefaultRouter()
 project_router.register(r'users', UserViewSet)
