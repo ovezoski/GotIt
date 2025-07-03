@@ -44,6 +44,7 @@ urlpatterns = [
     path("users/", include(project_router.urls)),
     path("", include(property_router.urls)),
     path("api-auth/", include("rest_framework.urls")),
+    path("prometheus/", include("django_prometheus.urls")),
 ] + debug_toolbar_urls()
 
 if settings.DEBUG:

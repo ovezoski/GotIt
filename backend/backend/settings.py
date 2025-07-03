@@ -11,13 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-from pathlib import Path    
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DOTENV_PATH = BASE_DIR.parent / '.env'
+DOTENV_PATH = BASE_DIR.parent / ".env"
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
+SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
 
 # allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '')
 # ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',') if host.strip()]
@@ -26,115 +26,113 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'SECRET_KEY')
 DEBUG = True
 # if DEBUG:
 #     ALLOWED_HOSTS.extend(['localhost', '127.0.0.1'])
-    
+
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
-    'property.apps.PropertyConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django_prometheus",
+    "property.apps.PropertyConfig",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "debug_toolbar",
-    'rest_framework',
-    'corsheaders',
-    'storages'
+    "rest_framework",
+    "corsheaders",
+    "storages",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DJANGO_DB_NAME', 'db'),
-        'USER': os.environ.get('DJANGO_DB_USER', 'user'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'password'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DJANGO_DB_NAME", "db"),
+        "USER": os.environ.get("DJANGO_DB_USER", "user"),
+        "PASSWORD": os.environ.get("DJANGO_DB_PASSWORD", "password"),
+        "HOST": os.environ.get("DJANGO_DB_HOST", "localhost"),
+        "PORT": os.environ.get("DJANGO_DB_PORT", "5432"),
     }
 }
 
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }
 
-cors_allowed_origins_str = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+cors_allowed_origins_str = os.environ.get("CORS_ALLOWED_ORIGINS", "")
 CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in cors_allowed_origins_str.split(',')
-    if origin.strip()
+    origin.strip() for origin in cors_allowed_origins_str.split(",") if origin.strip()
 ]
 
-csrf_trusted_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+csrf_trusted_origins_str = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in csrf_trusted_origins_str.split(',')
-    if origin.strip()
+    origin.strip() for origin in csrf_trusted_origins_str.split(",") if origin.strip()
 ]
 
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Europe/Skopje'
+TIME_ZONE = "Europe/Skopje"
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 INTERNAL_IPS = [
     "localhost",
@@ -154,17 +152,17 @@ CSRF_USE_SESSIONS = False
 CORS_ALLOW_CREDENTIALS = True
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "us-east-1")
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
 STORAGES = {
     "default": {
@@ -177,7 +175,7 @@ STORAGES = {
             "querystring_auth": False,
             "custom_domain": AWS_S3_CUSTOM_DOMAIN,
             "file_overwrite": False,
-        }
+        },
     },
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
@@ -190,16 +188,16 @@ STORAGES = {
             "custom_domain": AWS_S3_CUSTOM_DOMAIN,
             "location": "static",
             "file_overwrite": True,
-        }
-    }
+        },
+    },
 }
 
-STATIC_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/static/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f"http://{AWS_S3_CUSTOM_DOMAIN}/static/"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-MEDIA_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f"http://{AWS_S3_CUSTOM_DOMAIN}/media/"
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 if DEBUG:
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
+    STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
