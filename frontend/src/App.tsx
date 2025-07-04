@@ -6,6 +6,8 @@ import HomePage from "./pages/Home/HomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PropertyDetailsPage from "./pages/Property/PropertyDetailsPage";
 import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
+import LoginPage from "./pages/Auth/LoginPage";
+import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
   return (
@@ -15,11 +17,14 @@ function App() {
         <div className="w-full">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/property/:id/details"
               element={<PropertyDetailsPage />}
             />
-            <Route path="/property/add" element={<CreatePropertyPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/property/add" element={<CreatePropertyPage />} />
+            </Route>
           </Routes>
         </div>
       </SidebarProvider>

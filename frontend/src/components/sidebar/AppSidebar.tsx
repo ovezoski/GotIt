@@ -1,4 +1,11 @@
-import { Home, Inbox, PlusCircleIcon, Search, Settings } from "lucide-react";
+import {
+  Home,
+  LogIn,
+  LogOut,
+  PlusCircleIcon,
+  Search,
+  Settings,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,35 +18,57 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+
+type SidebarItem = {
+  title: string;
+  url: string;
+  icon: React.ComponentType;
+};
 
 function AppSidebar() {
-  const items = [
-    {
-      title: "Home",
-      url: "/",
-      icon: Home,
-    },
-    {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
-    },
-    {
-      title: "Add Property",
-      url: "/property/add",
-      icon: PlusCircleIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: Search,
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
-    },
-  ];
+  const { user } = useAuth();
+
+  const items: SidebarItem[] = [];
+
+  if (user) {
+    items.push({
+      title: "Logout",
+      url: "/logout",
+      icon: LogOut,
+    });
+  } else {
+    items.push({
+      title: "Login",
+      url: "/login",
+      icon: LogIn,
+    });
+  }
+
+  items.push(
+    ...[
+      {
+        title: "Home",
+        url: "/",
+        icon: Home,
+      },
+      {
+        title: "Add Property",
+        url: "/property/add",
+        icon: PlusCircleIcon,
+      },
+      {
+        title: "Search",
+        url: "#",
+        icon: Search,
+      },
+      {
+        title: "Settings",
+        url: "#",
+        icon: Settings,
+      },
+    ]
+  );
 
   return (
     <Sidebar collapsible="icon">

@@ -23,6 +23,10 @@ from rest_framework import routers, serializers, viewsets
 from django.conf import settings
 from django.conf.urls.static import static
 from property.urls import router as property_router
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -42,6 +46,8 @@ project_router.register(r"users", UserViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include(project_router.urls)),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("", include(property_router.urls)),
     path("api-auth/", include("rest_framework.urls")),
     path("prometheus/", include("django_prometheus.urls")),

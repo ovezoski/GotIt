@@ -29,11 +29,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    entrypoint:
+    command:
       [
         "/bin/sh",
         "-c",
-        "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 backend.wsgi:application",
+        "python /a/manage.py migrate && python /a/manage.py runserver 0.0.0.0:8000",
       ]
     volumes:
       - ./backend:/a
