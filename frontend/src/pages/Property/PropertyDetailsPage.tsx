@@ -1,5 +1,5 @@
 import useFetch from "@/hooks/useFetch";
-import type { Property } from "@/types/property";
+import type { Property } from "@/utils/types/property";
 import { useParams } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import { Cuboid } from "lucide-react";

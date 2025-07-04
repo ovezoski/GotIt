@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, type ReactNode } from "react";
 import axios, { type AxiosResponse } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "@/hooks/useAuth";
+import apiClient from "@/api/axiosConfig";
 
 interface AuthTokens {
   access: string;
@@ -64,11 +65,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const API_BASE_URL: string = "http://localhost:8000";
-
   const loginUser = async (username: string, password: string) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/token/`, {
+      const response = await apiClient.post<AuthTokens>("/api/token/", {
         username,
         password,
       });
@@ -109,7 +108,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/token/refresh/`, {
+      const response = await apiClient.post<AuthTokens>("/api/token/refresh/", {
         refresh: authTokens.refresh,
       });
 

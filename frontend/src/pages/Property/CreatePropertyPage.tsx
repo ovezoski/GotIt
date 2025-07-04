@@ -15,6 +15,8 @@ import { useState, useRef, type FormEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@radix-ui/react-label";
 import useFetch from "@/hooks/useFetch";
+import apiClient from "@/api/axiosConfig";
+import axios from "axios";
 
 function CreatePropertyPage() {
   const [name, setName] = useState("");
@@ -45,7 +47,7 @@ function CreatePropertyPage() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast("Validation Error");
+      toast.error("Validation Error");
       return;
     }
 
@@ -58,41 +60,35 @@ function CreatePropertyPage() {
     }
 
     const csrftoken = getCookie("csrftoken");
-    const API_BASE_URL =
-      import.meta.env.VITE_API_BASE_URL || "http://api.localhost";
 
     try {
-      const response = await fetch(`${API_BASE_URL}/property/`, {
-        method: "POST",
+      const response = await apiClient.post("/property/", formData, {
         headers: {
           "X-CSRFToken": csrftoken ?? "",
         },
-        body: formData,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error creating property:", errorData);
-        toast("Creation Failed");
-        return;
-      }
-
-      const responseData = await response.json();
-
-      toast("Success!");
-
+      toast.success("Property created.");
       setName("");
       setMainImageFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
 
-      navigate(`/property/${responseData.pk}/details`);
+      navigate(`/property/${response.data.pk}/details`);
     } catch (error) {
-      console.error("Network error or unexpected issue:", error);
-      toast(
-        "Could not connect to the server. Please check your internet connection."
-      );
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error creating property:",
+          error.response?.data || error.message
+        );
+        toast.error(error.response?.data?.detail || "Creation Failed");
+      } else {
+        console.error("Network error or unexpected issue:", error);
+        toast.error(
+          "Could not connect to the server. Please check your internet connection."
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }

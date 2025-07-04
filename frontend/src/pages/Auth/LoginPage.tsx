@@ -10,8 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
 import { useState, type FormEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -25,7 +27,9 @@ const LoginPage = () => {
       await loginUser(username, password);
       navigate("/");
     } catch (error) {
-      alert("Something went wrong during login!");
+      if (axios.isAxiosError<{ detail: string }>(error)) {
+        toast.error(`Login Failed.`);
+      }
     }
   };
 
@@ -56,6 +60,7 @@ const LoginPage = () => {
                 id="password"
                 type="password"
                 placeholder="Password"
+                autoComplete=""
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

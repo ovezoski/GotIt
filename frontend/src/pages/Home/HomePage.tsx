@@ -2,7 +2,7 @@ import PropertyCard from "@/components/PropertyCard";
 import SearchBar from "@/components/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
-import type { Property, PropertyListResponse } from "@/types/property";
+import type { Property, PropertyListResponse } from "@/utils/types/property";
 import { useCallback, useEffect, useState } from "react";
 import PropertyPagination from "./PropertyPagination";
 
@@ -44,7 +44,7 @@ function HomePage() {
       <div className="w-full p-2">
         <div className="m-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 row-span-full  gap-3 grid">
           {loading ? (
-            <div>
+            <div className="grid gap-2">
               <Skeleton className="h-30 w-full" />
               <Skeleton className="h-30" />
               <Skeleton className="h-30" />

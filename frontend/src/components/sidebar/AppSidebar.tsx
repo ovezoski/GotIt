@@ -9,6 +9,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,33 +18,27 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-
 type SidebarItem = {
   title: string;
   url: string;
   icon: React.ComponentType;
+  onClick?: () => void;
 };
 
 function AppSidebar() {
-  const { user } = useAuth();
+  const { user, logoutUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logoutUser();
+    toast("Logged out.");
+    navigate("/login");
+  };
 
   const items: SidebarItem[] = [];
-
-  if (user) {
-    items.push({
-      title: "Logout",
-      url: "/logout",
-      icon: LogOut,
-    });
-  } else {
-    items.push({
-      title: "Login",
-      url: "/login",
-      icon: LogIn,
-    });
-  }
 
   items.push(
     ...[
@@ -100,6 +95,27 @@ function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            {user ? (
+              <SidebarMenuButton asChild>
+                <Link onClick={handleLogout} to="#">
+                  <LogOut />
+                  <span>Log Out</span>
+                </Link>
+              </SidebarMenuButton>
+            ) : (
+              <SidebarMenuButton asChild>
+                <Link to="/login">
+                  <LogIn />
+                  <span>Log In</span>
+                </Link>
+              </SidebarMenuButton>
+            )}
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import type { Property } from "@/types/property";
+import type { Property } from "@/utils/types/property";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 
@@ -91,7 +91,7 @@ function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
         <Link to={`/property/${property.pk}/details`}>
           <img
             src={property.main_image_url}
-            alt=""
+            alt="Property Image"
             className="w-full  max-h-50px"
           />
         </Link>

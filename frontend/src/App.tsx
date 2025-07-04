@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { SidebarProvider } from "./components/ui/sidebar";
 import AppSidebar from "./components/sidebar/AppSidebar";
 import HomePage from "./pages/Home/HomePage";
@@ -8,6 +6,7 @@ import PropertyDetailsPage from "./pages/Property/PropertyDetailsPage";
 import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import PrivateRoute from "./utils/PrivateRoute";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
@@ -28,6 +27,7 @@ function App() {
           </Routes>
         </div>
       </SidebarProvider>
+      <Toaster richColors />
     </BrowserRouter>
   );
 }
