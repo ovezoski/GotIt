@@ -11,10 +11,12 @@ import {
 import type { Property } from "@/utils/types/property";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
+import apiClient from "@/api/axiosConfig";
+import axios from "axios";
+import { toast } from "sonner";
 
 interface PropertyCardProps {
   property: Property;
-  csrfToken: string | null;
   refreshProperties: () => void;
 }
 
@@ -24,43 +26,28 @@ function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
     const buttonElement = e.currentTarget as HTMLButtonElement;
     const propertyId = buttonElement.value;
 
-    const getCookie = (name: string) => {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name?.length + 1) === name + "=") {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    };
-
-    const csrfToken = getCookie("csrftoken") ?? "none";
-
-    const headers = new Headers();
-    headers.append("X-CSRFToken", csrfToken);
-
     try {
-      const response = await fetch(
-        `http://localhost:8000/property/${propertyId}/`,
-        {
-          method: "DELETE",
-          headers: headers,
-          credentials: "include",
-        }
-      );
+      const response = await apiClient.delete(`/property/${propertyId}/`);
 
-      if (response.ok) {
+      if (response.status === 204 || response.status === 200) {
+        toast.success("Property Deleted.");
         refreshProperties();
       } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(
+          `Failed to delete property with status: ${response.status}`
+        );
       }
     } catch (error) {
-      console.error("Error deleting property:", error);
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error deleting property:",
+          error.response?.data || error.message
+        );
+        toast.error("Failed to delete property.");
+      } else {
+        console.error("Network error or unexpected issue:", error);
+        toast.error("Could not connect to the server.");
+      }
     }
   };
 

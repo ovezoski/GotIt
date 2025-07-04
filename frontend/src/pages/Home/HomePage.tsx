@@ -3,37 +3,16 @@ import SearchBar from "@/components/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
 import type { Property, PropertyListResponse } from "@/utils/types/property";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import PropertyPagination from "./PropertyPagination";
 
 function HomePage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   const { data, refresh, loading } = useFetch<PropertyListResponse>(
     `/property?page=${page}&pageSize=8&search=${search}`
   );
-
-  const getCookie = useCallback((name: string) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }, []);
-
-  useEffect(() => {
-    const csrfTokenCookie = getCookie("csrftoken");
-    setCsrfToken(csrfTokenCookie);
-  }, [getCookie]);
 
   return (
     <>
@@ -42,7 +21,7 @@ function HomePage() {
       <PropertyPagination totalPages={5} page={page} setPage={setPage} />
 
       <div className="w-full p-2">
-        <div className="m-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 row-span-full  gap-3 grid">
+        <div className="m-auto p-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 row-span-full  gap-3 grid">
           {loading ? (
             <div className="grid gap-2">
               <Skeleton className="h-30 w-full" />
@@ -54,7 +33,6 @@ function HomePage() {
               <PropertyCard
                 property={property}
                 key={property.pk}
-                csrfToken={csrfToken}
                 refreshProperties={refresh}
               />
             ))

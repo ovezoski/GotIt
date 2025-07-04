@@ -14,7 +14,6 @@ import { useState, useRef, type FormEventHandler } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { Label } from "@radix-ui/react-label";
-import useFetch from "@/hooks/useFetch";
 import apiClient from "@/api/axiosConfig";
 import axios from "axios";
 
@@ -25,23 +24,6 @@ function CreatePropertyPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
-
-  useFetch("/property/");
-
-  const getCookie = (name: string) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -59,14 +41,8 @@ function CreatePropertyPage() {
       formData.append("main_image", mainImageFile);
     }
 
-    const csrftoken = getCookie("csrftoken");
-
     try {
-      const response = await apiClient.post("/property/", formData, {
-        headers: {
-          "X-CSRFToken": csrftoken ?? "",
-        },
-      });
+      const response = await apiClient.post("/property/", formData);
 
       toast.success("Property created.");
       setName("");
