@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
-import axios, { type AxiosResponse } from "axios";
+import axios, {
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "@/hooks/useAuth";
 import apiClient from "@/api/axiosConfig";
@@ -95,11 +98,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const logoutUser = () => {
+  const logoutUser = useCallback(() => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-  };
+  }, []);
+
+  useEffect(() => {
+    const requestInterceptor = apiClient.interceptors.request.use(
+      (config: InternalAxiosRequestConfig) => {
+        if (authTokens && !config.url?.includes("/token/")) {
+          config.headers.Authorization = `Bearer ${authTokens.access}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      apiClient.interceptors.request.eject(requestInterceptor);
+    };
+  }, [authTokens]);
 
   const updateToken = useCallback(async () => {
     if (!authTokens?.refresh) {
@@ -123,7 +144,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } finally {
       setLoading(false);
     }
-  }, [authTokens]);
+  }, [authTokens?.refresh, logoutUser]);
 
   useEffect(() => {
     const fiveMinutes: number = 1000 * 60 * 5;

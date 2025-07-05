@@ -21,6 +21,7 @@ if DEBUG:
 INSTALLED_APPS = [
     "django_prometheus",
     "property.apps.PropertyConfig",
+    "profiles.apps.ProfilesConfig",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "django.contrib.admin",

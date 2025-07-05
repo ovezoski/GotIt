@@ -1,5 +1,5 @@
 import { SidebarProvider } from "./components/ui/sidebar";
-import AppSidebar from "./components/sidebar/AppSidebar";
+import AppSidebar from "./components/AppSidebar";
 import HomePage from "./pages/Home/HomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PropertyDetailsPage from "./pages/Property/PropertyDetailsPage";
@@ -7,6 +7,7 @@ import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import PrivateRoute from "./utils/PrivateRoute";
 import { Toaster } from "@/components/ui/sonner";
+import ProfilePage from "./pages/Profile/ProfilePage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route
               path="/property/:id/details"
               element={<PropertyDetailsPage />}

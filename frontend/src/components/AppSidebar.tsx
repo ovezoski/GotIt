@@ -3,8 +3,8 @@ import {
   LogIn,
   LogOut,
   PlusCircleIcon,
-  Search,
   Settings,
+  User,
 } from "lucide-react";
 import {
   Sidebar,
@@ -17,7 +17,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "../ui/sidebar";
+} from "./ui/sidebar";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -53,9 +53,9 @@ function AppSidebar() {
         icon: PlusCircleIcon,
       },
       {
-        title: "Search",
-        url: "#",
-        icon: Search,
+        title: "Profile",
+        url: "/profile",
+        icon: User,
       },
       {
         title: "Settings",

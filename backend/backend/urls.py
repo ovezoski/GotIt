@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from django.conf import settings
 from django.conf.urls.static import static
+from profiles.serializers import ProfileSerializer
+from profiles.views import ProfileViewSet
 from property.urls import router as property_router
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -13,9 +15,11 @@ from rest_framework_simplejwt.views import (
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    profile = ProfileSerializer()
+
     class Meta:
         model = User
-        fields = ["url", "username", "email", "is_staff"]
+        fields = ["url", "username", "email", "is_staff", "profile"]
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -25,10 +29,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 project_router = routers.DefaultRouter()
 project_router.register(r"users", UserViewSet)
+project_router.register(r"profiles", ProfileViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("users/", include(project_router.urls)),
+    path("", include(project_router.urls)),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("", include(property_router.urls)),
