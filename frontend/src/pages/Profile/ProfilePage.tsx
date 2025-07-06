@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+
+import Editor, { type ContentEditableEvent } from "react-simple-wysiwyg";
 
 interface Profile {
   bio: string;
@@ -22,7 +23,7 @@ interface Profile {
 }
 
 function ProfilePage() {
-  const saving = false;
+  const [saving, setSaving] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -37,6 +38,7 @@ function ProfilePage() {
   const updateProfile = useCallback(async () => {
     if (!userId) return;
 
+    setSaving(true);
     try {
       const response = await apiClient.put(`/profiles/${userId}/`, {
         user: {
@@ -53,6 +55,9 @@ function ProfilePage() {
       }
     } catch (e) {
       console.error(e);
+      toast.error("An error occurred during profile update.");
+    } finally {
+      setSaving(false);
     }
   }, [bio, email, userId, username]);
 
@@ -69,6 +74,7 @@ function ProfilePage() {
       setBio(data.bio);
     } catch (err) {
       console.error("Fetch profile error:", err);
+      toast.error("Failed to load profile data.");
     } finally {
       setProfileLoading(false);
     }
@@ -78,10 +84,19 @@ function ProfilePage() {
     fetchProfile();
   }, [fetchProfile, userId]);
 
+  const handleBioChange = (e: ContentEditableEvent) => {
+    setBio(e.target.value);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 font-sans">
-      {profileLoading && "profile"}
-      {authLoading && "auth"}
+      {profileLoading && (
+        <div className="text-center text-gray-500">Loading profile data...</div>
+      )}
+      {authLoading && (
+        <div className="text-center text-gray-500">Authenticating...</div>
+      )}
+
       <Card className="w-full max-w-md rounded-xl shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -102,7 +117,9 @@ function ProfilePage() {
                   id="name"
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUsername(e.target.value)
+                  }
                   placeholder="Your full name"
                 />
               </div>
@@ -112,25 +129,26 @@ function ProfilePage() {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
                   placeholder="your.email@example.com"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
+                <Editor
                   value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us a little about yourself..."
-                  className="min-h-[100px]"
+                  onChange={handleBioChange}
+                  containerProps={{ style: { height: "200px", width: "100%" } }}
+                  className="rounded-md border border-input bg-background text-sm ring-offset-background"
                 />
               </div>
               <Button
                 type="button"
                 onClick={updateProfile}
                 className="w-full"
-                disabled={saving}
+                disabled={saving || loading}
               >
                 {saving ? "Saving..." : "Save Changes"}
               </Button>
