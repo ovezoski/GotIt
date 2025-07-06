@@ -14,7 +14,7 @@ metadata:
   name: property-ingress
   namespace: property-app
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: property-app-api-stripprefix@kubernetescrd
+
 spec:
   ingressClassName: traefik
   rules:
@@ -45,3 +45,5 @@ spec:
                 name: backend-service
                 port:
                   number: 8000
+  annotations:
+

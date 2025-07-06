@@ -17,12 +17,19 @@ spec:
     spec:
       containers:
         - name: react-frontend
-          image: blagojaovezoski/property-frontend:006a481
+          image: blagojaovezoski/property-frontend:4b8bb98
           ports:
             - containerPort: 80
           envFrom:
             - configMapRef:
                 name: property-config
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
           livenessProbe:
             httpGet:
               path: /

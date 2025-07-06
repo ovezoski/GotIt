@@ -6,6 +6,7 @@ import axios, {
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "@/hooks/useAuth";
 import apiClient from "@/api/axiosConfig";
+import { toast } from "sonner";
 
 interface AuthTokens {
   access: string;
@@ -81,10 +82,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(jwtDecode<UserPayload>(data.access));
 
       localStorage.setItem("authTokens", JSON.stringify(data));
-
+      toast.success("Logged In.");
       return response;
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        toast.error("Log In Failed.");
+
         console.error(
           "Login failed (AxiosError):",
           error.response?.data || error.message
