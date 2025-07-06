@@ -19,6 +19,7 @@ interface PropertyCardProps {
   property: Property;
   refreshProperties: () => void;
 }
+const DEVELOMPENT = import.meta.env.VITE_DEVELOPMENT;
 
 function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
   const deleteProperty: MouseEventHandler = async (e) => {
@@ -76,11 +77,13 @@ function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
 
       <CardContent>
         <Link to={`/property/${property.pk}/details`}>
-          <img
-            src={property.main_image_url}
-            alt="Property Image"
-            className="w-full  max-h-50px"
-          />
+          {!DEVELOMPENT && (
+            <img
+              src={property.main_image_url}
+              alt="Property Image"
+              className="w-full  max-h-50px"
+            />
+          )}
         </Link>
       </CardContent>
     </Card>

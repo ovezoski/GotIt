@@ -12,7 +12,21 @@ class PropertySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = ["name", "created_at", "main_image", "main_image_url", "pk"]
+        fields = [
+            "name",
+            "created_at",
+            "main_image",
+            "main_image_url",
+            "address_line_1",
+            "address_line_2",
+            "city",
+            "state_province",
+            "zip_code",
+            "country",
+            "latitude",
+            "longitude",
+            "pk",
+        ]
         read_only_fields = ["created_at"]
 
     def get_main_image_url(self, obj):
