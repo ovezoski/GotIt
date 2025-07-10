@@ -55,5 +55,3 @@ jobs:
           tags: |
             ${{ steps.login-ecr-backend.outputs.registry }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ steps.vars.outputs.sha }}
             ${{ steps.login-ecr-backend.outputs.registry }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
-          outputs: |
-            type=raw,name=tags
