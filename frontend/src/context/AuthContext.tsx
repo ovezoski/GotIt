@@ -30,6 +30,12 @@ export interface AuthContextType {
     username: string,
     password: string
   ) => Promise<AxiosResponse<AuthTokens>>;
+  registerUser: (
+    username: string,
+    email: string,
+    password: string,
+    password2: string
+  ) => Promise<AxiosResponse<UserPayload>>;
   logoutUser: () => void;
   loading: boolean;
 }
@@ -96,6 +102,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         console.error("Login failed (Standard Error):", error.message);
       } else {
         console.error("Login failed (Unknown Error):", error);
+      }
+      throw error;
+    }
+  };
+
+  const registerUser = async (
+    username: string,
+    email: string,
+    password: string,
+    password2: string
+  ) => {
+    try {
+      const response = await apiClient.post("/api/register/", {
+        username,
+        email,
+        password,
+        password2,
+      });
+      await loginUser(username, password);
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error("Registration Failed.");
+
+        console.error(
+          "Registration failed (AxiosError):",
+          error.response?.data || error.message
+        );
+      } else if (error instanceof Error) {
+        console.error("Registration failed (Standard Error):", error.message);
+      } else {
+        console.error("Registration failed (Unknown Error):", error);
       }
       throw error;
     }
@@ -171,6 +209,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     authTokens,
     loginUser,
+    registerUser,
     logoutUser,
     loading,
   };

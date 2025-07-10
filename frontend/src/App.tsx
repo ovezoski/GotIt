@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PropertyDetailsPage from "./pages/Property/PropertyDetailsPage";
 import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
 import LoginPage from "./pages/Auth/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
 import PrivateRoute from "./utils/PrivateRoute";
 import { Toaster } from "@/components/ui/sonner";
 import ProfilePage from "./pages/Profile/ProfilePage";
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route
               path="/property/:id/details"

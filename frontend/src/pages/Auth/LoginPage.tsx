@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 import { useState, type FormEventHandler } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const LoginPage = () => {
@@ -67,8 +67,16 @@ const LoginPage = () => {
             </div>
           </CardContent>
 
-          <CardFooter className="flex justify-center pt-2">
-            <Button type="submit">Login</Button>
+          <CardFooter className="flex flex-col gap-4 pt-2">
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+            <div className="text-center text-sm">
+              Don't have an account?{" "}
+              <Link to="/register" className="underline">
+                Sign up
+              </Link>
+            </div>
           </CardFooter>
         </form>
       </Card>
