@@ -39,6 +39,7 @@ urlpatterns = [
     path("", include(property_router.urls)),
     path("api-auth/", include("rest_framework.urls")),
     path("prometheus/", include("django_prometheus.urls")),
+    path("silk/", include("silk.urls", namespace="silk")),
 ] + debug_toolbar_urls()
 
 if settings.DEBUG:
