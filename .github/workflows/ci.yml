@@ -33,7 +33,18 @@ jobs:
         id: vars
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Build and push Django backend image
+      - name: Configure AWS credentials for build
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Django backend image to ECR
         id: backend_build
         uses: docker/build-push-action@v5
         with:
@@ -41,18 +52,18 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            blagojaovezoski/property-backend:${{ steps.vars.outputs.sha }}
-            blagojaovezoski/property-backend:latest
-      - name: Build and push React frontend image
-        id: frontend_build
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: true
-          tags: |
-            blagojaovezoski/property-frontend:${{ steps.vars.outputs.sha }}
-            blagojaovezoski/property-frontend:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ steps.vars.outputs.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
+      # - name: Build and push React frontend image
+      #   id: frontend_build
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: ./frontend
+      #     file: ./frontend/Dockerfile
+      #     push: true
+      #     tags: |
+      #       blagojaovezoski/property-frontend:${{ steps.vars.outputs.sha }}
+      #       blagojaovezoski/property-frontend:latest
 
   deploy:
     needs: build
