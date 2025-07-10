@@ -1,0 +1,27 @@
+name: Backend CD - Deploy to App Runner
+
+on:
+  workflow_run:
+    workflows: ["Backend CI - Build and Push Image"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy_backend:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+
+    steps:
+      - name: Configure AWS credentials for App Runner deployment (Backend)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy Backend to AWS App Runner
+        run: |
+          aws apprunner start-deployment \
+            --service-arn ${{ secrets.BACKEND_APP_RUNNER_ARN }}
