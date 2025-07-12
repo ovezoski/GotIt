@@ -100,14 +100,18 @@ function AppSidebar() {
           <SidebarMenuItem>
             {user ? (
               <SidebarMenuButton asChild>
-                <Link onClick={handleLogout} to="#">
+                <Link
+                  onClick={handleLogout}
+                  data-testid="logout-nav-link"
+                  to="#"
+                >
                   <LogOut />
                   <span>Log Out</span>
                 </Link>
               </SidebarMenuButton>
             ) : (
               <SidebarMenuButton asChild>
-                <Link to="/login">
+                <Link to="/login" data-testid="login-nav-link">
                   <LogIn />
                   <span>Log In</span>
                 </Link>

@@ -52,6 +52,7 @@ const LoginPage = () => {
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                data-testid="username-field"
               />
             </div>
             <div className="grid gap-2">
@@ -63,12 +64,13 @@ const LoginPage = () => {
                 autoComplete=""
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                data-testid="password-field"
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4 pt-2">
-            <Button type="submit" className="w-full">
+            <Button type="submit" data-testid="login-submit" className="w-full">
               Login
             </Button>
             <div className="text-center text-sm">
