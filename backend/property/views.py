@@ -5,6 +5,10 @@ from .permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets, permissions, filters, pagination
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import action
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 
 from rest_framework.response import Response
@@ -28,7 +32,6 @@ class StandardResultSetPagination(pagination.PageNumberPagination):
                 "results": data,
             }
         )
-
 
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
@@ -61,6 +64,17 @@ class PropertyViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
+
+    @action(detail=True, methods=["get"])
+    def generate_pdf(self, request, pk=None):
+        property = self.get_object()
+        html_string = render_to_string("details.html", {"property": property})
+        html = HTML(string=html_string, base_url=request.build_absolute_uri())
+        pdf = html.write_pdf()
+
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f"attachment; filename={property.name}.pdf"
+        return response
 
 
 class OwnerPropertyViewSet(viewsets.ReadOnlyModelViewSet):

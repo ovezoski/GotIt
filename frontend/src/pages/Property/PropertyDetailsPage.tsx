@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import apiClient from "@/api/axiosConfig";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 function PropertyDetailsPage() {
   const { id } = useParams();
@@ -53,6 +54,24 @@ function PropertyDetailsPage() {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    try {
+      const response = await apiClient.get(`/property/${id}/generate_pdf/`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${property?.name}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      toast.success("PDF downloaded successfully");
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+      toast.error("Failed to download PDF");
+    }
+  };
+
   if (loading) {
     return <PropertyDetailsSkeleton />;
   }
@@ -72,19 +91,24 @@ function PropertyDetailsPage() {
                 <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
                   {property?.name}
                 </CardTitle>
-                {currentUser && currentUser?.user_id === property?.owner && (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => navigate(`/property/${id}/edit`)}
-                    >
-                      Edit Property
-                    </Button>
-                    <Button variant="destructive" onClick={handleDelete}>
-                      Delete Property
-                    </Button>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={handleDownloadPdf}>
+                    Download PDF
+                  </Button>
+                  {currentUser && currentUser?.user_id === property?.owner && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate(`/property/${id}/edit`)}
+                      >
+                        Edit Property
+                      </Button>
+                      <Button variant="destructive" onClick={handleDelete}>
+                        Delete Property
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
               <CardDescription className="flex items-center text-md text-gray-600 dark:text-gray-400 mt-2">
                 <MapPin className="mr-2 h-5 w-5 text-gray-500" />

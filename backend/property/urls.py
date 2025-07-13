@@ -9,4 +9,4 @@ router.register(
 )
 
 app_name = "property"
-urlpatterns = []
+urlpatterns = router.urls

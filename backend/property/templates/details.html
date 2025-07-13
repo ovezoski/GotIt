@@ -1,40 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Got Property</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  </head>
-  <body class="bg-sky-200 text-white container w-full">
-    <div class="bg-sky-800 p-5">
-      <a href="/property/"> All Properties</a>
+    <title>Property Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-cover bg-center h-64" style="background-image: url('{% if property.main_image %}{{ property.main_image.url }}{% else %}/media/property_images/default.jpg{% endif %}');">
+            </div>
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-4xl font-bold text-gray-800">{{ property.name }}</h1>
+                    <div class="text-lg font-semibold text-gray-600">{{ property.created_at|date:"F d, Y" }}</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-3">Property Information</h2>
+                        <div class="space-y-2">
+                            <p><strong>Address:</strong> {{ property.address_line_1 }}, {{ property.city }}, {{ property.state_province }}, {{ property.country }}</p>
+                            <p><strong>Zip Code:</strong> {{ property.zip_code }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-3">Owner Details</h2>
+                        <div class="space-y-2">
+                            <p><strong>Owner:</strong> {{ property.owner.username }}</p>
+                            <p><strong>Email:</strong> {{ property.owner.email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-3">Orders</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white">
+                            <thead class="bg-gray-800 text-white">
+                                <tr>
+                                    <th class="w-1/2 text-left py-3 px-4 uppercase font-semibold text-sm">Price</th>
+                                    <th class="w-1/2 text-left py-3 px-4 uppercase font-semibold text-sm">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                {% for order in property.order_set.all %}
+                                <tr>
+                                    <td class="text-left py-3 px-4">${{ order.price }}</td>
+                                    <td class="text-left py-3 px-4">{{ order.created_at|date:"F d, Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-800 text-white text-center p-4">
+                <p>&copy; 2025 GotIt. All rights reserved.</p>
+            </div>
+        </div>
     </div>
-
-    {% if property %}
-    <div class="bg-sky-700 w-1/2 mx-auto my-3">
-      <h3 class="bg-sky-700">{{property.name}}</h3>
-      <div>{{property.created_at}}</div>
-
-      <div class="bg-sky-600 p-3 shadow-md">
-        <form class="flex flex-col">
-          {% csrf_token %} {% for order in property.order_set.all %}
-          <div class="m-3 shadow-sm bg-sky-500">
-            <div class="p-1">${{order.price }}</div>
-
-            <div class="p-1">{{ order.created_at }}</div>
-          </div>
-          {% endfor %}
-          <div>
-            <input type="text" value="{{ property.name }}" />
-          </div>
-          <div>
-            <input type="date" value="{{ property.created_at }}" />
-          </div>
-        </form>
-      </div>
-    </div>
-
-    {% endif %}
-  </body>
+</body>
 </html>
