@@ -41,6 +41,6 @@ class Property(models.Model):
 
 
 class Order(models.Model):
-    property = models.ForeignKey(Property, on_delete=models.DO_NOTHING)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
     price = models.DecimalField(decimal_places=2, max_digits=1000)
     created_at = models.DateTimeField()
