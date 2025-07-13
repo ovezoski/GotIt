@@ -12,8 +12,9 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-
 import Editor, { type ContentEditableEvent } from "react-simple-wysiwyg";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Profile {
   bio: string;
@@ -27,7 +28,6 @@ function ProfilePage() {
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-
   const [profileLoading, setProfileLoading] = useState<boolean>(true);
 
   const { user, loading: authLoading } = useAuth();
@@ -67,7 +67,6 @@ function ProfilePage() {
     setProfileLoading(true);
     try {
       const response = await apiClient.get<Profile>(`/profiles/${userId}/`);
-
       const data = response.data;
       setUsername(data.user.username);
       setEmail(data.user.email);
@@ -81,22 +80,26 @@ function ProfilePage() {
   }, [userId]);
 
   useEffect(() => {
-    fetchProfile();
+    if (userId) {
+      fetchProfile();
+    }
   }, [fetchProfile, userId]);
 
   const handleBioChange = (e: ContentEditableEvent) => {
     setBio(e.target.value);
   };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 font-sans">
-      {profileLoading && (
-        <div className="text-center text-gray-500">Loading profile data...</div>
-      )}
-      {authLoading && (
-        <div className="text-center text-gray-500">Authenticating...</div>
-      )}
+  if (loading) {
+    return <ProfilePageSkeleton />;
+  }
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex justify-center items-center min-h-screen bg-gray-100 p-4 font-sans"
+    >
       <Card className="w-full max-w-md rounded-xl shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -107,53 +110,77 @@ function ProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="text-center text-gray-500">Loading profile...</div>
-          ) : (
-            <form className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  value={username}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setUsername(e.target.value)
-                  }
-                  placeholder="Your full name"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEmail(e.target.value)
-                  }
-                  placeholder="your.email@example.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Editor
-                  value={bio}
-                  onChange={handleBioChange}
-                  containerProps={{ style: { height: "200px", width: "100%" } }}
-                  className="rounded-md border border-input bg-background text-sm ring-offset-background"
-                />
-              </div>
-              <Button
-                type="button"
-                onClick={updateProfile}
-                className="w-full"
-                disabled={saving || loading}
-              >
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-            </form>
-          )}
+          <form className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={username}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUsername(e.target.value)
+                }
+                placeholder="Your full name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                placeholder="your.email@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Editor
+                value={bio}
+                onChange={handleBioChange}
+                containerProps={{ style: { height: "200px", width: "100%" } }}
+                className="rounded-md border border-input bg-background text-sm ring-offset-background"
+              />
+            </div>
+            <Button
+              type="button"
+              onClick={updateProfile}
+              className="w-full"
+              disabled={saving || loading}
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+function ProfilePageSkeleton() {
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 font-sans">
+      <Card className="w-full max-w-md rounded-xl shadow-lg">
+        <CardHeader>
+          <Skeleton className="h-7 w-2/4 mx-auto" />
+          <Skeleton className="h-5 w-3/4 mx-auto mt-2" />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-40 w-full" />
+          </div>
+          <Skeleton className="h-10 w-full" />
         </CardContent>
       </Card>
     </div>
