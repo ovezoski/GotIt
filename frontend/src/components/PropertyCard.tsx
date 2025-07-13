@@ -100,7 +100,7 @@ function PropertyCard({ property, refreshProperties, isFeatured = false }: Prope
               />
             )}
             {isFeatured && (
-              <p className="text-lg mt-4">{property.description}</p>
+              <p className="text-lg mt-4">{property?.description}</p>
             )}
           </Link>
         </CardContent>

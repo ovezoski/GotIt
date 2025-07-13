@@ -4,6 +4,7 @@ export type Property = {
   pk: string;
   main_image: string;
   main_image_url: string;
+  description?: string;
 
   address_line_1: string;
   address_line_2: string;
