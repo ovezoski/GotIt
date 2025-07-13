@@ -14,6 +14,7 @@ import { Trash2 } from "lucide-react";
 import apiClient from "@/api/axiosConfig";
 import axios from "axios";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 interface PropertyCardProps {
   property: Property;
@@ -22,6 +23,8 @@ interface PropertyCardProps {
 const DEVELOMPENT = import.meta.env.VITE_DEVELOPMENT;
 
 function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
+  const { user } = useAuth();
+
   const deleteProperty: MouseEventHandler = async (e) => {
     e.preventDefault();
     const buttonElement = e.currentTarget as HTMLButtonElement;
@@ -64,14 +67,16 @@ function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
           </CardDescription>
         </Link>
         <CardAction>
-          <Button
-            className="bg-red-400"
-            variant="destructive"
-            value={property.pk}
-            onClick={deleteProperty}
-          >
-            <Trash2 />
-          </Button>
+          {user?.user_id === property.owner && (
+            <Button
+              className="bg-red-400"
+              variant="destructive"
+              value={property.pk}
+              onClick={deleteProperty}
+            >
+              <Trash2 />
+            </Button>
+          )}
         </CardAction>
       </CardHeader>
 

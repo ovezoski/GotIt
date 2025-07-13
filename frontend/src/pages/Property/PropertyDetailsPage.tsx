@@ -1,6 +1,6 @@
 import useFetch from "@/hooks/useFetch";
 import type { Property } from "@/utils/types/property";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import {
   Badge,
@@ -21,9 +21,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { User } from "@/utils/types/user";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import apiClient from "@/api/axiosConfig";
 
 function PropertyDetailsPage() {
   const { id } = useParams();
+  const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const { data: property } = useFetch<Property>("/property/" + id);
   const { data: user } = useFetch<User>(`/profiles/${property?.owner}/`);
@@ -35,12 +40,14 @@ function PropertyDetailsPage() {
     },
     zoom: 17,
   };
-  // const items = [
-  //   [41.99213251989934, 21.439457155423124],
-  //   [41.99153681168819, 21.442263524979815],
-  //   [41.992532433078246, 21.440366930174967],
-  //   [41.99048593706282, 21.44090475153171],
-  // ];
+  const handleDelete = async () => {
+    try {
+      await apiClient.delete(`/property/${id}/`);
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to delete property:", error);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -48,9 +55,16 @@ function PropertyDetailsPage() {
         <div className="lg:col-span-2">
           <Card className="mb-6 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
-                {property?.name}
-              </CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
+                  {property?.name}
+                </CardTitle>
+                {currentUser?.user_id === property?.owner && (
+                  <Button variant="destructive" onClick={handleDelete}>
+                    Delete Property
+                  </Button>
+                )}
+              </div>
               <CardDescription className="flex items-center text-md text-gray-600 dark:text-gray-400 mt-2">
                 <MapPin className="mr-2 h-5 w-5 text-gray-500" />
                 {`${property?.address_line_1}, ${property?.city}, ${property?.country}`}
