@@ -24,14 +24,18 @@ import type { User } from "@/utils/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import apiClient from "@/api/axiosConfig";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function PropertyDetailsPage() {
   const { id } = useParams();
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const { data: property } = useFetch<Property>("/property/" + id);
-  const { data: user } = useFetch<User>(`/profiles/${property?.owner}/`);
+  const { data: property, loading } = useFetch<Property>("/property/" + id);
+  const { data: user } = useFetch<User>(
+    property?.owner ? `/profiles/${property.owner}/` : ""
+  );
 
   const defaultProps = {
     center: {
@@ -49,8 +53,17 @@ function PropertyDetailsPage() {
     }
   };
 
+  if (loading) {
+    return <PropertyDetailsSkeleton />;
+  }
+
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <motion.div
+      initial={{ opacity: 0.8, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      className="container mx-auto p-4 md:p-8"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <Card className="mb-6 shadow-lg">
@@ -202,7 +215,7 @@ function PropertyDetailsPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -211,6 +224,49 @@ function Marker() {
     <>
       <Cuboid />
     </>
+  );
+}
+
+function PropertyDetailsSkeleton() {
+  return (
+    <div className="container mx-auto p-4 md:p-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <Card className="mb-6 shadow-lg">
+            <CardHeader>
+              <Skeleton className="h-8 w-3/4 mb-2" />
+              <Skeleton className="h-5 w-1/2" />
+            </CardHeader>
+          </Card>
+
+          <Card className="mb-6 shadow-lg">
+            <CardHeader>
+              <Skeleton className="h-7 w-1/3" />
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className="flex items-center">
+                  <Skeleton className="h-5 w-5 mr-3" />
+                  <Skeleton className="h-5 w-full" />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="lg:col-span-1">
+          <Card className="mb-6 shadow-lg sticky top-4">
+            <CardHeader>
+              <Skeleton className="h-7 w-1/4" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-96 w-full" />
+              <Skeleton className="h-4 w-3/4 mt-4" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }
 

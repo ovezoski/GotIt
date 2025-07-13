@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { type MouseEventHandler } from "react";
 import { Button } from "./ui/button";
 import {
@@ -56,42 +57,50 @@ function PropertyCard({ property, refreshProperties }: PropertyCardProps) {
   };
 
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <Link to={`/property/${property.pk}/details`}>
-          <CardTitle>{property.name}</CardTitle>
-          <CardDescription>
-            {property?.created_at
-              ? new Date(property.created_at).toLocaleString()
-              : "N/A"}
-          </CardDescription>
-        </Link>
-        <CardAction>
-          {user?.user_id === property.owner && (
-            <Button
-              className="bg-red-400"
-              variant="destructive"
-              value={property.pk}
-              onClick={deleteProperty}
-            >
-              <Trash2 />
-            </Button>
-          )}
-        </CardAction>
-      </CardHeader>
+    <motion.div
+      initial={{ opacity: 0.8, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Card className="h-full">
+        <CardHeader>
+          <Link to={`/property/${property.pk}/details`}>
+            <CardTitle>{property.name}</CardTitle>
+            <CardDescription>
+              {property?.created_at
+                ? new Date(property.created_at).toLocaleString()
+                : "N/A"}
+            </CardDescription>
+          </Link>
+          <CardAction>
+            {user?.user_id === property.owner && (
+              <Button
+                className="bg-red-400"
+                variant="destructive"
+                value={property.pk}
+                onClick={deleteProperty}
+              >
+                <Trash2 />
+              </Button>
+            )}
+          </CardAction>
+        </CardHeader>
 
-      <CardContent>
-        <Link to={`/property/${property.pk}/details`}>
-          {!DEVELOMPENT && (
-            <img
-              src={property.main_image_url}
-              alt="Property Image"
-              className="w-full  max-h-50px"
-            />
-          )}
-        </Link>
-      </CardContent>
-    </Card>
+        <CardContent>
+          <Link to={`/property/${property.pk}/details`}>
+            {!DEVELOMPENT && (
+              <img
+                src={property.main_image_url}
+                alt="Property Image"
+                className="w-full  max-h-50px"
+              />
+            )}
+          </Link>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 
