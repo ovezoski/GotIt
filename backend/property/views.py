@@ -44,3 +44,15 @@ class PropertyViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
+
+
+class OwnerPropertyViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PropertySerializer
+    pagination_class = StandardResultSetPagination
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Property.objects.filter(owner=self.request.user).order_by("-created_at")
+
+    def get_serializer_context(self):
+        return {"request": self.request}

@@ -10,6 +10,7 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 import PrivateRoute from "./utils/PrivateRoute";
 import { Toaster } from "@/components/ui/sonner";
 import ProfilePage from "./pages/Profile/ProfilePage";
+import MyPropertiesPage from "./pages/Profile/MyPropertiesPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/my-properties" element={<MyPropertiesPage />} />
             <Route
               path="/property/:id/details"
               element={<PropertyDetailsPage />}

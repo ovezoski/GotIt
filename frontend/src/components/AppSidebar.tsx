@@ -1,8 +1,9 @@
 import {
   Home,
+  HousePlus,
   LogIn,
   LogOut,
-  PlusCircleIcon,
+  LucideList,
   Settings,
   User,
 } from "lucide-react";
@@ -48,9 +49,14 @@ function AppSidebar() {
         icon: Home,
       },
       {
+        title: "My Properties",
+        url: "/my-properties",
+        icon: LucideList,
+      },
+      {
         title: "Add Property",
         url: "/property/add",
-        icon: PlusCircleIcon,
+        icon: HousePlus,
       },
       {
         title: "Profile",
