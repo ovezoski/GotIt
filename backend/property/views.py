@@ -15,7 +15,7 @@ class StandardResultSetPagination(pagination.PageNumberPagination):
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
 class PropertyViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.all()
+    queryset = Property.objects.all().order_by("created_at")
     serializer_class = PropertySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]

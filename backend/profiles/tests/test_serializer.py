@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from .serializers import UserEmailSerializer
+from ..serializers import UserEmailSerializer
+
 
 User = get_user_model()
 
@@ -24,18 +25,11 @@ class SerializerTestSetup(TestCase):
 class UserEmailSerializerTest(SerializerTestSetup):
 
     def test_user_email_serializer_serialization(self):
-        """
-        Test that the UserEmailSerializer correctly serializes a User instance.
-        The expected data should match the user created in setUp.
-        """
         serializer = UserEmailSerializer(instance=self.user)
         expected_data = {"email": self.user.email, "username": self.user.username}
         self.assertEqual(serializer.data, expected_data)
 
     def test_user_email_serializer_deserialization_valid(self):
-        """
-        Test that the UserEmailSerializer correctly deserializes valid data.
-        """
         data = {"email": "new@example.com", "username": "newuser"}
         serializer = UserEmailSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
@@ -43,9 +37,6 @@ class UserEmailSerializerTest(SerializerTestSetup):
         self.assertEqual(serializer.validated_data["username"], "newuser")
 
     def test_user_email_serializer_deserialization_invalid_email(self):
-        """
-        Test deserialization with an invalid email format.
-        """
         data = {"email": "invalid-email", "username": "newuser"}
         serializer = UserEmailSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -53,9 +44,6 @@ class UserEmailSerializerTest(SerializerTestSetup):
         self.assertIn("Enter a valid email address.", serializer.errors["email"])
 
     def test_user_email_serializer_deserialization_missing_fields(self):
-        """
-        Test deserialization when a required field is missing.
-        """
         data = {"email": "new@example.com"}
         serializer = UserEmailSerializer(data=data)
         self.assertFalse(serializer.is_valid())
