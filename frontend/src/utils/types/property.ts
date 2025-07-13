@@ -18,4 +18,5 @@ export type Property = {
 
 export interface PropertyListResponse {
   results: Property[];
+  total_pages: number;
 }

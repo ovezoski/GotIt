@@ -7,11 +7,28 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 
 
+from rest_framework.response import Response
+
+
 class StandardResultSetPagination(pagination.PageNumberPagination):
-    page_size = 8
+    page_size = 12
     max_page_size = 100
     page_query_param = "page"
     page_size_query_param = "pageSize"
+
+    def get_paginated_response(self, data):
+        return Response(
+            {
+                "links": {
+                    "next": self.get_next_link(),
+                    "previous": self.get_previous_link(),
+                },
+                "total_pages": self.page.paginator.num_pages,
+                "count": self.page.paginator.count,
+                "results": data,
+            }
+        )
+
 
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
