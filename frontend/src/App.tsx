@@ -4,6 +4,7 @@ import HomePage from "./pages/Home/HomePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PropertyDetailsPage from "./pages/Property/PropertyDetailsPage";
 import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
+import EditPropertyPage from "./pages/Property/EditPropertyPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -27,6 +28,10 @@ function App() {
             />
             <Route element={<PrivateRoute />}>
               <Route path="/property/add" element={<CreatePropertyPage />} />
+              <Route
+                path="/property/:id/edit"
+                element={<EditPropertyPage />}
+              />
             </Route>
           </Routes>
         </div>

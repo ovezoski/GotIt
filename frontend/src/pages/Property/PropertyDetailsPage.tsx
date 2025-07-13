@@ -59,10 +59,18 @@ function PropertyDetailsPage() {
                 <CardTitle className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
                   {property?.name}
                 </CardTitle>
-                {currentUser?.user_id === property?.owner && (
-                  <Button variant="destructive" onClick={handleDelete}>
-                    Delete Property
-                  </Button>
+                {currentUser && currentUser?.user_id === property?.owner && (
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate(`/property/${id}/edit`)}
+                    >
+                      Edit Property
+                    </Button>
+                    <Button variant="destructive" onClick={handleDelete}>
+                      Delete Property
+                    </Button>
+                  </div>
                 )}
               </div>
               <CardDescription className="flex items-center text-md text-gray-600 dark:text-gray-400 mt-2">
