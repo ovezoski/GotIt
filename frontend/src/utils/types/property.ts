@@ -13,6 +13,7 @@ export type Property = {
   longitude: string;
   state_province: string;
   zip_code: string;
+  owner: string;
 };
 
 export interface PropertyListResponse {

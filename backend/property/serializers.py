@@ -9,6 +9,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
     main_image = serializers.ImageField(read_only=True)
     main_image_url = serializers.SerializerMethodField()
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Property
@@ -26,8 +27,9 @@ class PropertySerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "pk",
+            "owner",
         ]
-        read_only_fields = ["created_at"]
+        read_only_fields = ["created_at", "owner"]
 
     def get_main_image_url(self, obj):
 

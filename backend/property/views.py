@@ -15,7 +15,7 @@ class StandardResultSetPagination(pagination.PageNumberPagination):
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
 class PropertyViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.all().order_by("created_at")
+    queryset = Property.objects.all().order_by("-created_at")
     serializer_class = PropertySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
@@ -28,15 +28,18 @@ class PropertyViewSet(viewsets.ModelViewSet):
         """
         return {"request": self.request}
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def get_permissions(self):
         """
         Instantiates and returns the list of
         permissions that this view requires.
         """
         if self.action == "create":
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [permissions.IsAuthenticated]
         elif self.action in ["update", "partial_update", "destroy", "delete"]:
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]

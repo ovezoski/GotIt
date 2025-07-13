@@ -11,6 +11,7 @@ import {
   LocateFixed,
   Mail,
   MapPin,
+  User as UserIcon,
 } from "lucide-react";
 import {
   Card,
@@ -19,11 +20,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { User } from "@/utils/types/user";
 
 function PropertyDetailsPage() {
   const { id } = useParams();
 
   const { data: property } = useFetch<Property>("/property/" + id);
+  const { data: user } = useFetch<User>(`/profiles/${property?.owner}/`);
 
   const defaultProps = {
     center: {
@@ -137,6 +140,12 @@ function PropertyDetailsPage() {
                   </Badge>
                 </div>
               )}
+              <div className="flex items-center">
+                <UserIcon className="mr-3 h-5 w-5 text-blue-500" />
+                <p>
+                  <strong>Owner:</strong> {user?.user?.username}
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>

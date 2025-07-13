@@ -1,6 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
 
 from property.models import Property
 
@@ -8,8 +9,10 @@ from property.models import Property
 class PropertyViewSetTest(APITestCase):
 
     def setUp(self):
-        self.property1 = Property.objects.create(name="Property 1")
-        self.property2 = Property.objects.create(name="Property 2")
+        self.user = User.objects.create_user(username="testuser", password="testpassword")
+        self.client.force_authenticate(user=self.user) # type: ignore
+        self.property1 = Property.objects.create(name="Property 1", owner=self.user)
+        self.property2 = Property.objects.create(name="Property 2", owner=self.user)
         self.list_url = reverse("property-list")
 
     def test_list_properties(self):
@@ -22,6 +25,7 @@ class PropertyViewSetTest(APITestCase):
         response = self.client.post(self.list_url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Property.objects.count(), 3)
+        self.assertEqual(Property.objects.latest("id").owner, self.user)
 
     def test_retrieve_property(self):
         detail_url = reverse("property-detail", kwargs={"pk": self.property1.pk})
