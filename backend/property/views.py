@@ -1,5 +1,6 @@
 from .models import Property
 from .serializers import PropertySerializer
+from .permissions import IsOwnerOrReadOnly
 
 from rest_framework import viewsets, permissions, filters, pagination
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -38,8 +39,8 @@ class PropertyViewSet(viewsets.ModelViewSet):
         """
         if self.action == "create":
             permission_classes = [permissions.IsAuthenticated]
-        elif self.action in ["update", "partial_update", "destroy", "delete"]:
-            permission_classes = [permissions.IsAuthenticated]
+        elif self.action in ["update", "partial_update", "destroy"]:
+            permission_classes = [IsOwnerOrReadOnly]
         else:
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
