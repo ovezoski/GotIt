@@ -4,7 +4,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@radix-ui/react-popover";
+} from "@/components/ui/popover";
+
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 

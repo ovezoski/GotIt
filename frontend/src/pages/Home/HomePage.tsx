@@ -1,13 +1,11 @@
-import FilterBar from "@/components/FilterBar";
 import PropertyCard from "@/components/PropertyCard";
-import SearchBar from "@/components/SearchBar";
+import SearchAndFilterBar from "@/components/SearchAndFilterBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
 import type { Property, PropertyListResponse } from "@/utils/types/property";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 function HomePage() {
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [allProperties, setAllProperties] = useState<Property[]>([]);
@@ -17,12 +15,11 @@ function HomePage() {
     const params = new URLSearchParams();
     params.append("page", page.toString());
     params.append("pageSize", "24");
-    if (search) params.append("search", search);
     for (const key in filters) {
       params.append(key, filters[key]);
     }
     return `/property?${params.toString()}`;
-  }, [filters, page, search]);
+  }, [filters, page]);
 
   const { data, loading, refresh } = useFetch<PropertyListResponse>(buildUrl);
 
@@ -38,7 +35,7 @@ function HomePage() {
   useEffect(() => {
     setPage(1);
     setAllProperties([]);
-  }, [search, filters]);
+  }, [filters]);
 
   const handleFilterChange = (newFilters: Record<string, string>) => {
     setPage(1);
@@ -66,8 +63,7 @@ function HomePage() {
 
   return (
     <>
-      <SearchBar search={search} setSearch={setSearch} />
-      <FilterBar onFilterChange={handleFilterChange} />
+      <SearchAndFilterBar onFilterChange={handleFilterChange} />
 
       {loading && allProperties.length === 0 ? (
         <HomePageSkeleton />

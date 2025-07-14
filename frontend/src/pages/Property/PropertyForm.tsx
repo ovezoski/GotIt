@@ -13,10 +13,10 @@ import { Input } from "@/components/ui/input";
 import { useState, useRef, type FormEventHandler, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { Label } from "@radix-ui/react-label";
 import apiClient from "@/api/axiosConfig";
 import axios from "axios";
 import type { Property } from "@/utils/types/property";
+import { Label } from "@/components/ui/label";
 
 interface PropertyFormProps {
   property?: Property;

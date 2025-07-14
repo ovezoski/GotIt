@@ -40,8 +40,8 @@ class StandardResultSetPagination(pagination.PageNumberPagination):
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all().order_by("-created_at")
     serializer_class = PropertySerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = PropertyFilter
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ["name"]
     ordering_fields = ["created_at"]
     pagination_class = StandardResultSetPagination
