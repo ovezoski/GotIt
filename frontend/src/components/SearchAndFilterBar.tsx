@@ -11,22 +11,26 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SelectGroup } from "@radix-ui/react-select";
 
 interface SearchAndFilterBarProps {
   onFilterChange: (filters: Record<string, string>) => void;
+  totalProperties: number;
 }
 
-function SearchAndFilterBar({ onFilterChange }: SearchAndFilterBarProps) {
+function SearchAndFilterBar({
+  onFilterChange,
+  totalProperties,
+}: SearchAndFilterBarProps) {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [ordering, setOrdering] = useState("");
+  const [ordering, setOrdering] = useState("created_at");
 
   const handleApplyFilters = () => {
     const filters: Record<string, string> = {};
@@ -61,12 +65,13 @@ function SearchAndFilterBar({ onFilterChange }: SearchAndFilterBarProps) {
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="created_at">Date (Newest First)</SelectItem>
-            <SelectItem value="-created_at">Date (Oldest First)</SelectItem>
+            <SelectItem value="-created_at">Date (Newest First)</SelectItem>
+            <SelectItem value="created_at">Date (Oldest First)</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <Button onClick={handleApplyFilters}>Search</Button>
+
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger asChild>
@@ -87,29 +92,28 @@ function SearchAndFilterBar({ onFilterChange }: SearchAndFilterBarProps) {
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
               />
-              <div>
-                <Select onValueChange={setOrdering} value={ordering}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
+              <Select onValueChange={setOrdering} value={ordering}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
                     <SelectLabel>Fruits</SelectLabel>
-                    <SelectGroup>
-                      <SelectItem value="created_at">
-                        Date (Newest First)
-                      </SelectItem>
-                      <SelectItem value="-created_at">
-                        Date (Oldest First)
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+                    <SelectItem value="-created_at">
+                      Date (Newest First)
+                    </SelectItem>
+                    <SelectItem value="created_at">
+                      Date (Oldest First)
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               <Button onClick={handleApplyFilters}>Apply</Button>
             </div>
           </SheetContent>
         </Sheet>
       </div>
+      <div className="text-lg ">{totalProperties}</div>
     </div>
   );
 }

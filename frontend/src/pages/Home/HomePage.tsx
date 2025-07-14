@@ -10,6 +10,7 @@ function HomePage() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [allProperties, setAllProperties] = useState<Property[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalProperties, setTotalProperties] = useState(0);
 
   const buildUrl = useCallback(() => {
     const params = new URLSearchParams();
@@ -29,7 +30,9 @@ function HomePage() {
         page === 1 ? data.results : [...prev, ...data.results]
       );
       setTotalPages(data.total_pages);
+      setTotalProperties(data.count);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -63,7 +66,10 @@ function HomePage() {
 
   return (
     <>
-      <SearchAndFilterBar onFilterChange={handleFilterChange} />
+      <SearchAndFilterBar
+        onFilterChange={handleFilterChange}
+        totalProperties={totalProperties}
+      />
 
       {loading && allProperties.length === 0 ? (
         <HomePageSkeleton />

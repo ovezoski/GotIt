@@ -11,7 +11,7 @@ import {
 } from "./ui/card";
 import type { Property } from "@/utils/types/property";
 import { Link } from "react-router-dom";
-import { Trash2 } from "lucide-react";
+import { Trash2, MapPin } from "lucide-react";
 import apiClient from "@/api/axiosConfig";
 import axios from "axios";
 import { toast } from "sonner";
@@ -24,7 +24,11 @@ interface PropertyCardProps {
 }
 const DEVELOMPENT = import.meta.env.VITE_DEVELOPMENT;
 
-function PropertyCard({ property, refreshProperties, isFeatured = false }: PropertyCardProps) {
+function PropertyCard({
+  property,
+  refreshProperties,
+  isFeatured = false,
+}: PropertyCardProps) {
   const { user } = useAuth();
 
   const deleteProperty: MouseEventHandler = async (e) => {
@@ -59,17 +63,19 @@ function PropertyCard({ property, refreshProperties, isFeatured = false }: Prope
 
   return (
     <motion.div
-      initial={{ opacity: 0.8, scale: 0.95 }}
+      initial={{ opacity: 0.8, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.995 }}
       className="h-full"
     >
       <Card className="h-full flex flex-col">
         <CardHeader>
           <Link to={`/property/${property.pk}/details`}>
-            <CardTitle className={isFeatured ? "text-4xl" : ""}>{property.name}</CardTitle>
+            <CardTitle className={isFeatured ? "text-4xl" : ""}>
+              {property.name}
+            </CardTitle>
             <CardDescription>
               {property?.created_at
                 ? new Date(property.created_at).toLocaleString()
@@ -96,9 +102,20 @@ function PropertyCard({ property, refreshProperties, isFeatured = false }: Prope
               <img
                 src={property.main_image_url}
                 alt="Property Image"
-                className={`w-full object-cover ${isFeatured ? "h-96" : "h-48"}`}
+                className={`w-full object-cover ${
+                  isFeatured ? "h-96" : "h-48"
+                }`}
               />
             )}
+            <div className="mt-4 text-sm text-gray-600">
+              <div className="flex items-center">
+                <MapPin className="mr-2" size={16} />
+                <span>
+                  {property.address_line_1}, {property.city},{" "}
+                  {property.state_province}
+                </span>
+              </div>
+            </div>
             {isFeatured && (
               <p className="text-lg mt-4">{property?.description}</p>
             )}
