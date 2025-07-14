@@ -49,7 +49,7 @@ function HomePage() {
   const observer = useRef<IntersectionObserver>(null);
   const lastPropertyElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading || page > 1) return;
+      if (loading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && page < totalPages) {
