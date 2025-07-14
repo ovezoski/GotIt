@@ -1,3 +1,4 @@
+import FilterBar from "@/components/FilterBar";
 import PropertyCard from "@/components/PropertyCard";
 import SearchBar from "@/components/SearchBar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,32 +9,47 @@ import { useEffect, useState, useRef, useCallback } from "react";
 function HomePage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<Record<string, string>>({});
   const [allProperties, setAllProperties] = useState<Property[]>([]);
   const [totalPages, setTotalPages] = useState(1);
 
-  const { data, loading, refresh } = useFetch<PropertyListResponse>(
-    `/property?page=${page}&pageSize=12&search=${search}`
-  );
+  const buildUrl = useCallback(() => {
+    const params = new URLSearchParams();
+    params.append("page", page.toString());
+    params.append("pageSize", "24");
+    if (search) params.append("search", search);
+    for (const key in filters) {
+      params.append(key, filters[key]);
+    }
+    return `/property?${params.toString()}`;
+  }, [filters, page, search]);
+
+  const { data, loading, refresh } = useFetch<PropertyListResponse>(buildUrl);
 
   useEffect(() => {
     if (data?.results) {
-      if (page === 1) {
-        setAllProperties(data.results);
-      } else {
-        setAllProperties((prev) => [...prev, ...data.results]);
-      }
+      setAllProperties((prev) =>
+        page === 1 ? data.results : [...prev, ...data.results]
+      );
       setTotalPages(data.total_pages);
     }
-  }, [data, page]);
+  }, [data]);
 
   useEffect(() => {
     setPage(1);
-  }, [search]);
+    setAllProperties([]);
+  }, [search, filters]);
+
+  const handleFilterChange = (newFilters: Record<string, string>) => {
+    setPage(1);
+    setFilters(newFilters);
+    setAllProperties([]);
+  };
 
   const observer = useRef<IntersectionObserver>(null);
   const lastPropertyElementRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading) return;
+      if (loading || page > 1) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && page < totalPages) {
@@ -51,6 +67,7 @@ function HomePage() {
   return (
     <>
       <SearchBar search={search} setSearch={setSearch} />
+      <FilterBar onFilterChange={handleFilterChange} />
 
       {loading && allProperties.length === 0 ? (
         <HomePageSkeleton />

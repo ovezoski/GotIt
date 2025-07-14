@@ -1,6 +1,8 @@
+from .filters import PropertyFilter
 from .models import Property
 from .serializers import PropertySerializer
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import viewsets, permissions, filters, pagination
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -38,8 +40,10 @@ class StandardResultSetPagination(pagination.PageNumberPagination):
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all().order_by("-created_at")
     serializer_class = PropertySerializer
-    filter_backends = [filters.SearchFilter]
+    filterset_class = PropertyFilter
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]
     search_fields = ["name"]
+    ordering_fields = ["created_at"]
     pagination_class = StandardResultSetPagination
 
     def get_serializer_context(self):
