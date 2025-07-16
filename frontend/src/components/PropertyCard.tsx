@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import type { Property } from "@/utils/types/property";
+import type { Property } from "@/types/property";
 import { Link } from "react-router-dom";
 import { Trash2, MapPin } from "lucide-react";
 import apiClient from "@/api/axiosConfig";

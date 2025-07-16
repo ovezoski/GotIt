@@ -7,7 +7,7 @@ import CreatePropertyPage from "./pages/Property/CreatePropertyPage";
 import EditPropertyPage from "./pages/Property/EditPropertyPage";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
-import PrivateRoute from "./utils/PrivateRoute";
+import PrivateRoute from "./lib/PrivateRoute";
 import { Toaster } from "@/components/ui/sonner";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import MyPropertiesPage from "./pages/Profile/MyPropertiesPage";

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import useFetch from "@/hooks/useFetch";
 import PropertyForm from "./PropertyForm";
-import type { Property } from "@/utils/types/property";
+import type { Property } from "@/types/property";
 
 function EditPropertyPage() {
   const { id } = useParams<{ id: string }>();

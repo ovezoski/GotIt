@@ -1,7 +1,7 @@
 import PropertyCard from "@/components/PropertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
-import type { Property, PropertyListResponse } from "@/utils/types/property";
+import type { Property, PropertyListResponse } from "@/types/property";
 import { useState } from "react";
 import PropertyPagination from "../Home/PropertyPagination";
 

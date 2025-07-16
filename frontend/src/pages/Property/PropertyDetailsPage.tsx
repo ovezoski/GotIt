@@ -1,5 +1,5 @@
 import useFetch from "@/hooks/useFetch";
-import type { Property } from "@/utils/types/property";
+import type { Property } from "@/types/property";
 import { useNavigate, useParams } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
 import {
@@ -20,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { User } from "@/utils/types/user";
+import type { User } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import apiClient from "@/api/axiosConfig";

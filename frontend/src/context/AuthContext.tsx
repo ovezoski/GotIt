@@ -1,48 +1,15 @@
-import { useState, useEffect, useCallback, type ReactNode } from "react";
-import axios, {
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from "axios";
+import { useState, useEffect, useCallback } from "react";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "@/hooks/useAuth";
 import apiClient from "@/api/axiosConfig";
 import { toast } from "sonner";
-
-interface AuthTokens {
-  access: string;
-  refresh: string;
-}
-
-interface UserPayload {
-  user_id: number;
-  username: string;
-  email?: string;
-  exp: number;
-  iat: number;
-  jti: string;
-  token_type: string;
-}
-
-export interface AuthContextType {
-  user: UserPayload | null;
-  authTokens: AuthTokens | null;
-  loginUser: (
-    username: string,
-    password: string
-  ) => Promise<AxiosResponse<AuthTokens>>;
-  registerUser: (
-    username: string,
-    email: string,
-    password: string,
-    password2: string
-  ) => Promise<AxiosResponse<UserPayload>>;
-  logoutUser: () => void;
-  loading: boolean;
-}
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
+import type {
+  AuthContextType,
+  AuthProviderProps,
+  AuthTokens,
+  UserPayload,
+} from "@/types/auth";
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authTokens, setAuthTokens] = useState<AuthTokens | null>(() => {

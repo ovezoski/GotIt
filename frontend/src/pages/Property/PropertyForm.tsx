@@ -15,7 +15,7 @@ import { useState, useRef, type FormEventHandler, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "@/api/axiosConfig";
 import axios from "axios";
-import type { Property } from "@/utils/types/property";
+import type { Property } from "@/types/property";
 import { Label } from "@/components/ui/label";
 
 interface PropertyFormProps {
@@ -125,6 +125,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                data-cy="property-name-input"
               />
             </div>
 
@@ -137,6 +138,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
+                data-cy="property-address-input"
               />
             </div>
 
@@ -149,6 +151,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
+                data-cy="property-city-input"
               />
             </div>
 
@@ -161,6 +164,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 required
+                data-cy="property-state-input"
               />
             </div>
 
@@ -173,6 +177,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
+                data-cy="property-country-input"
               />
             </div>
 
@@ -185,6 +190,7 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 required
+                data-cy="property-zip-code-input"
               />
             </div>
 

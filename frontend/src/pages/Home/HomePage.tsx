@@ -2,7 +2,7 @@ import PropertyCard from "@/components/PropertyCard";
 import SearchAndFilterBar from "@/components/SearchAndFilterBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetch from "@/hooks/useFetch";
-import type { Property, PropertyListResponse } from "@/utils/types/property";
+import type { Property, PropertyListResponse } from "@/types/property";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 function HomePage() {
