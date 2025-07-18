@@ -11,4 +11,9 @@ export default defineConfig({
       return config;
     },
   },
+  env: {
+    TEST_USERNAME: "TestUser",
+    TEST_PASSWORD: "TestUserPassword",
+    BASE_URL: "http://localhost:5173",
+  },
 });

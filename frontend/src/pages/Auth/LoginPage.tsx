@@ -74,7 +74,7 @@ const LoginPage = () => {
               Login
             </Button>
             <div className="text-center text-sm">
-              Don't have an account?{" "}
+              Don't have an account?
               <Link to="/register" className="underline">
                 Sign up
               </Link>

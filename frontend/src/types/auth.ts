@@ -36,3 +36,11 @@ export interface AuthContextType {
 export interface AuthProviderProps {
   children: ReactNode;
 }
+
+export type User = {
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+};
