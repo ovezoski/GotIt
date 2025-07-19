@@ -61,5 +61,16 @@ services:
     depends_on:
       - backend
 
+  k6:
+    image: grafana/k6:latest
+    container_name: k6_runner
+    volumes:
+      - ./performance-tests:/k6 
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:8000
+    command: ["run", "/k6/test.js"]
+
 volumes:
   property_data:
