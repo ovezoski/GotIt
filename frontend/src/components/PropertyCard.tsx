@@ -37,7 +37,7 @@ function PropertyCard({
     const propertyId = buttonElement.value;
 
     try {
-      const response = await apiClient.delete(`/property/${propertyId}/`);
+      const response = await apiClient.delete(`/api/property/${propertyId}/`);
 
       if (response.status === 204 || response.status === 200) {
         toast.success("Property Deleted.");

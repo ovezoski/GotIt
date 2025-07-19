@@ -73,8 +73,8 @@ function PropertyForm({ property, isEditMode = false }: PropertyFormProps) {
 
     try {
       const response = isEditMode
-        ? await apiClient.patch(`/property/${property?.pk}/`, formData)
-        : await apiClient.post("/property/", formData);
+        ? await apiClient.patch(`/api/property/${property?.pk}/`, formData)
+        : await apiClient.post("/api/property/", formData);
 
       toast.success(
         `Property ${isEditMode ? "updated" : "created"} successfully.`

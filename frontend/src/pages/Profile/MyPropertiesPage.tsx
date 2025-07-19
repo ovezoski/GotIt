@@ -9,7 +9,7 @@ function MyPropertiesPage() {
   const [page, setPage] = useState(1);
 
   const { data, refresh, loading } = useFetch<PropertyListResponse>(
-    `/my-properties?page=${page}&pageSize=8`
+    `/api/my-properties?page=${page}&pageSize=8`
   );
 
   return (

@@ -20,22 +20,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { User } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import apiClient from "@/api/axiosConfig";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import type { User } from "@/types/auth";
 
 function PropertyDetailsPage() {
   const { id } = useParams();
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const { data: property, loading } = useFetch<Property>("/property/" + id);
+  const { data: property, loading } = useFetch<Property>("/api/property/" + id);
   const { data: user } = useFetch<User>(
-    property?.owner ? `/profiles/${property.owner}/` : ""
+    property?.owner ? `/api/profiles/${property.owner}/` : ""
   );
 
   const defaultProps = {
@@ -47,7 +47,7 @@ function PropertyDetailsPage() {
   };
   const handleDelete = async () => {
     try {
-      await apiClient.delete(`/property/${id}/`);
+      await apiClient.delete(`/api/property/${id}/`);
       navigate("/");
     } catch (error) {
       console.error("Failed to delete property:", error);
@@ -56,9 +56,12 @@ function PropertyDetailsPage() {
 
   const handleDownloadPdf = async () => {
     try {
-      const response = await apiClient.get(`/property/${id}/generate_pdf/`, {
-        responseType: "blob",
-      });
+      const response = await apiClient.get(
+        `/api/property/${id}/generate_pdf/`,
+        {
+          responseType: "blob",
+        }
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;

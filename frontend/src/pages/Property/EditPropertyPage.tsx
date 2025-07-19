@@ -5,7 +5,9 @@ import type { Property } from "@/types/property";
 
 function EditPropertyPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: property, loading } = useFetch<Property>(`/property/${id}/`);
+  const { data: property, loading } = useFetch<Property>(
+    `/api/property/${id}/`
+  );
 
   if (loading) {
     return <div>Loading...</div>;

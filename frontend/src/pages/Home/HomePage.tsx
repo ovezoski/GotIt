@@ -19,7 +19,7 @@ function HomePage() {
     for (const key in filters) {
       params.append(key, filters[key]);
     }
-    return `/property?${params.toString()}`;
+    return `/api/property?${params.toString()}`;
   }, [filters, page]);
 
   const { data, loading, refresh } = useFetch<PropertyListResponse>(buildUrl);

@@ -8,5 +8,5 @@ router.register(
     r"my-properties", views.OwnerPropertyViewSet, basename="my-properties"
 )
 
-app_name = "property"
+app_name = "property"   
 urlpatterns = router.urls

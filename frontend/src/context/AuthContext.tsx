@@ -110,6 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    setLoading(false);
   }, []);
 
   useEffect(() => {

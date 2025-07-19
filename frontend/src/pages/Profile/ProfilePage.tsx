@@ -40,7 +40,7 @@ function ProfilePage() {
 
     setSaving(true);
     try {
-      const response = await apiClient.put(`/profiles/${userId}/`, {
+      const response = await apiClient.put(`/api/profiles/${userId}/`, {
         user: {
           email: email,
           username: username,
@@ -66,7 +66,7 @@ function ProfilePage() {
 
     setProfileLoading(true);
     try {
-      const response = await apiClient.get<Profile>(`/profiles/${userId}/`);
+      const response = await apiClient.get<Profile>(`/api/profiles/${userId}/`);
       const data = response.data;
       setUsername(data.user.username);
       setEmail(data.user.email);

@@ -17,18 +17,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."}
+            )
 
         validate_password(attrs["password"])
 
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data["username"], email=validated_data["email"]
-        )
 
-        user.set_password(validated_data["password"])
+        validated_data.pop("password2")
+        password = validated_data.pop("password")
+
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
         user.save()
 
         return user
@@ -58,8 +61,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
         if user_data:
             user_instance = profile_instance.user
-            for attr, value in user_data.items():
-                setattr(user_instance, attr, value)
-            user_instance.save()
+            user_serializer = self.fields['user'] 
+            user_serializer.update(user_instance, user_data)
 
         return profile_instance

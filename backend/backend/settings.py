@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DOTENV_PATH = BASE_DIR.parent / ".env"
+
+load_dotenv(dotenv_path=DOTENV_PATH)
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
 
@@ -169,6 +172,7 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         "OPTIONS": {
+            "url_protocol": "http:",
             "access_key": AWS_ACCESS_KEY_ID,
             "secret_key": AWS_SECRET_ACCESS_KEY,
             "bucket_name": AWS_STORAGE_BUCKET_NAME,
@@ -181,6 +185,7 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
         "OPTIONS": {
+            "url_protocol": "http:",
             "access_key": AWS_ACCESS_KEY_ID,
             "secret_key": AWS_SECRET_ACCESS_KEY,
             "bucket_name": AWS_STORAGE_BUCKET_NAME,
