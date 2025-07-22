@@ -1,13 +1,10 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-DOTENV_PATH = BASE_DIR.parent / ".env"
-
-load_dotenv(dotenv_path=DOTENV_PATH)
+load_dotenv(find_dotenv())
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
 
