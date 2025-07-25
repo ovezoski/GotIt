@@ -1,4 +1,4 @@
-name: Backend CD - Deploy to App Runner
+name: Backend CD - Deploy to EC2
 
 on:
   workflow_run:
@@ -14,9 +14,68 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
 
     steps:
-      - name: Configure AWS credentials for App Runner deployment (Backend)
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            AWS_REGION="${{ secrets.AWS_REGION }}"
+            ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
+            ECR_REPOSITORY_BACKEND="${{ secrets.ECR_REPOSITORY_BACKEND }}"
+            DOCKER_CONTAINER_NAME="${{ secrets.DOCKER_CONTAINER_NAME }}"
+            IMAGE_TAG="latest"
+
+            echo "Starting deployment to EC2..."
+
+            echo "Logging into ECR on EC2..."
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+            if [ $? -ne 0 ]; then
+              echo "ERROR: Failed to log into ECR on EC2. Check IAM role permissions for ECR and network connectivity."
+              exit 1
+            fi
+            echo "ECR login successful."
+
+            FULL_IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG"
+            echo "Attempting to deploy image: $FULL_IMAGE_URI"
+
+            if [ "$(docker ps -q -f name=$DOCKER_CONTAINER_NAME)" ]; then
+              echo "Stopping existing container: $DOCKER_CONTAINER_NAME..."
+              docker stop $DOCKER_CONTAINER_NAME
+              echo "Removing existing container: $DOCKER_CONTAINER_NAME..."
+              docker rm $DOCKER_CONTAINER_NAME
+            else
+              echo "No existing container named $DOCKER_CONTAINER_NAME found. Skipping stop/remove."
+            fi
+
+            echo "Pulling latest image from ECR..."
+            docker pull $FULL_IMAGE_URI
+            if [ $? -ne 0 ]; then
+              echo "ERROR: Failed to pull image $FULL_IMAGE_URI. Check ECR repository, image tag, and IAM role permissions."
+              exit 1
+            fi
+            echo "Image pull successful."
+
+            echo "Running new container: $DOCKER_CONTAINER_NAME..."
+            docker run -d \
+              --name $DOCKER_CONTAINER_NAME \
+              -p 80:8000 \
+              --restart always \
+              $FULL_IMAGE_URI
+            if [ $? -ne 0 ]; then
+              echo "ERROR: Failed to run new container. Check Docker run command and container logs."
+              exit 1
+            fi
+            echo "Deployment to EC2 completed successfully!"
+
+            sleep 5
+            docker ps -a -f name=$DOCKER_CONTAINER_NAME
+            docker logs $DOCKER_CONTAINER_NAME --tail 20
